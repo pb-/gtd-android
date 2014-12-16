@@ -19,7 +19,7 @@ public class Command {
 	}
 
 	public String toString() {
-		return "" + op + ' ' + argument;
+		return "" + op + ' ' + argument.replace('\n', ' ');
 	}
 
 	public static Command parse(String s) {
