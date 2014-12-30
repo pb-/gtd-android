@@ -156,7 +156,7 @@ public class ItemListActivity extends Activity implements OnItemClickListener,
 		AlertDialog.Builder builder = new AlertDialog.Builder(this);
 		builder.setTitle("Action");
 		builder.setItems(items, new DialogInterface.OnClickListener() {
-			ItemListActivity act;
+			Context ctx;
 			int num;
 
 			public void onClick(DialogInterface dialog, int item) {
@@ -167,7 +167,7 @@ public class ItemListActivity extends Activity implements OnItemClickListener,
 								"Moved to inbox.", Toast.LENGTH_SHORT).show();
 						requestDelayedSync();
 					} else {
-						Intent i = new Intent(act, ProcessActivity.class);
+						Intent i = new Intent(ctx, ProcessActivity.class);
 						i.putExtra("num", num);
 						startActivity(i);
 
@@ -178,10 +178,10 @@ public class ItemListActivity extends Activity implements OnItemClickListener,
 							Toast.LENGTH_SHORT).show();
 					requestDelayedSync();
 				} else if (item == 2) {
-					AlertDialog.Builder alert = new AlertDialog.Builder(act);
+					AlertDialog.Builder alert = new AlertDialog.Builder(ctx);
 
 					alert.setTitle("Edit");
-					final EditText input = new EditText(act);
+					final EditText input = new EditText(ctx);
 					input.setText(GTDService.instance.getItemTitle(num));
 					alert.setView(input);
 
@@ -206,13 +206,13 @@ public class ItemListActivity extends Activity implements OnItemClickListener,
 				}
 			}
 
-			public DialogInterface.OnClickListener init(int n,
-					ItemListActivity a) {
+			public DialogInterface.OnClickListener init(int n, Context c) {
 				num = n;
-				act = a;
+				ctx = c;
 				return this;
 			}
-		}.init(itemList.getItem(position).num, this));
+		}.init(itemList.getItem(position).num, getActionBar()
+				.getThemedContext()));
 		AlertDialog alert = builder.create();
 		alert.show();
 	}
