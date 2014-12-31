@@ -14,6 +14,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.content.LocalBroadcastManager;
 import android.text.format.DateFormat;
@@ -150,30 +151,40 @@ public class ItemListActivity extends Activity implements OnItemClickListener,
 	@Override
 	public void onItemClick(AdapterView<?> parent, View view, int position,
 			long id) {
-		final CharSequence[] items = {
-				tag.equals("inbox") ? "Process" : "To inbox", "Delete", "Edit" };
+		CharSequence[] items;
+		ItemListItem it = itemList.getItem(position);
+
+		if (it.extractLink() != null) {
+			items = new CharSequence[] {
+					tag.equals("inbox") ? "Process" : "To inbox", "Delete",
+					"Edit", "Open link" };
+		} else {
+			items = new CharSequence[] {
+					tag.equals("inbox") ? "Process" : "To inbox", "Delete",
+					"Edit" };
+		}
 
 		AlertDialog.Builder builder = new AlertDialog.Builder(this);
 		builder.setTitle("Action");
 		builder.setItems(items, new DialogInterface.OnClickListener() {
 			Context ctx;
-			int num;
+			ItemListItem it;
 
 			public void onClick(DialogInterface dialog, int item) {
 				if (item == 0) {
 					if (!tag.equals("inbox")) {
-						GTDService.instance.deleteTag(num);
+						GTDService.instance.deleteTag(it.num);
 						Toast.makeText(getApplicationContext(),
 								"Moved to inbox.", Toast.LENGTH_SHORT).show();
 						requestDelayedSync();
 					} else {
 						Intent i = new Intent(ctx, ProcessActivity.class);
-						i.putExtra("num", num);
+						i.putExtra("num", it.num);
 						startActivity(i);
 
 					}
 				} else if (item == 1) {
-					GTDService.instance.actionDeleteItem(num);
+					GTDService.instance.actionDeleteItem(it.num);
 					Toast.makeText(getApplicationContext(), "Deleted.",
 							Toast.LENGTH_SHORT).show();
 					requestDelayedSync();
@@ -182,14 +193,14 @@ public class ItemListActivity extends Activity implements OnItemClickListener,
 
 					alert.setTitle("Edit");
 					final EditText input = new EditText(ctx);
-					input.setText(GTDService.instance.getItemTitle(num));
+					input.setText(it.title);
 					alert.setView(input);
 
 					alert.setPositiveButton("Ok",
 							new DialogInterface.OnClickListener() {
 								public void onClick(DialogInterface dialog,
 										int whichButton) {
-									GTDService.instance.actionSetTitle(num,
+									GTDService.instance.actionSetTitle(it.num,
 											input.getText().toString());
 									requestDelayedSync();
 								}
@@ -203,16 +214,22 @@ public class ItemListActivity extends Activity implements OnItemClickListener,
 							});
 
 					alert.show();
+				} else if (item == 3) {
+					// open link
+					Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri
+							.parse(it.extractLink()));
+					startActivity(browserIntent);
+
 				}
 			}
 
-			public DialogInterface.OnClickListener init(int n, Context c) {
-				num = n;
+			public DialogInterface.OnClickListener init(ItemListItem i,
+					Context c) {
+				it = i;
 				ctx = c;
 				return this;
 			}
-		}.init(itemList.getItem(position).num, getActionBar()
-				.getThemedContext()));
+		}.init(it, getActionBar().getThemedContext()));
 		AlertDialog alert = builder.create();
 		alert.show();
 	}
