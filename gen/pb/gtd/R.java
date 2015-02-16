@@ -26,6 +26,8 @@ public final class R {
         public static final int ic_menu_refresh=0x7f020002;
     }
     public static final class id {
+        public static final int action_export=0x7f09000f;
+        public static final int action_export_full=0x7f090010;
         public static final int action_process=0x7f09000d;
         public static final int action_settings=0x7f09000e;
         public static final int action_sync=0x7f09000c;
@@ -55,6 +57,8 @@ public final class R {
         public static final int tag_list=0x7f080003;
     }
     public static final class string {
+        public static final int action_export=0x7f06000a;
+        public static final int action_export_full=0x7f06000b;
         public static final int action_process=0x7f060002;
         public static final int action_settings=0x7f060001;
         public static final int action_sync=0x7f060005;

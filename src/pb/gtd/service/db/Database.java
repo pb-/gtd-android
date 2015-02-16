@@ -2,6 +2,7 @@ package pb.gtd.service.db;
 
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -302,5 +303,30 @@ public class Database {
 			e.printStackTrace();
 		}
 
+	}
+
+	public synchronized boolean copyCommands(File to) {
+		File from = service.getFileStreamPath("commands");
+
+		try {
+			FileInputStream in = new FileInputStream(from);
+			FileOutputStream out = new FileOutputStream(to);
+
+			byte[] buf = new byte[4096];
+			int len;
+			while ((len = in.read(buf)) > 0) {
+				out.write(buf, 0, len);
+			}
+			in.close();
+			out.close();
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+			return false;
+		} catch (IOException e) {
+			e.printStackTrace();
+			return false;
+		}
+
+		return true;
 	}
 }

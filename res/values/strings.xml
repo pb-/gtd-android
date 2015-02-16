@@ -11,5 +11,7 @@
     <string name="title_activity_process">ProcessActivity</string>
     <string name="add_tag_hint">New tag...</string>
     <string name="title_activity_settings">Sync Settings</string>
+    <string name="action_export">Export</string>
+    <string name="action_export_full">Export (full)</string>
 
 </resources>

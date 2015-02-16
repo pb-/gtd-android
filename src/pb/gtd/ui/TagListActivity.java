@@ -125,6 +125,19 @@ public class TagListActivity extends Activity implements OnItemClickListener,
 		case R.id.action_settings:
 			startActivity(new Intent(this, SettingsActivity.class));
 			return true;
+		case R.id.action_export:
+		case R.id.action_export_full:
+			String filename = GTDService.instance
+					.export(item.getItemId() == R.id.action_export_full);
+			String text;
+			if (filename != null) {
+				text = "Export: " + filename;
+			} else {
+				text = "Export failed :-(";
+			}
+			Toast.makeText(getApplicationContext(), text, Toast.LENGTH_SHORT)
+					.show();
+			return true;
 		case R.id.action_process:
 			if (GTDService.instance.getItems("inbox").size() > 0) {
 				startActivity(new Intent(this, ProcessActivity.class));
