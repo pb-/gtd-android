@@ -338,11 +338,13 @@ public class GTDService extends Service {
 	}
 
 	public String getItemTitle(int num) {
+		lock.lock();
 		for (Item i : itemList) {
 			if (i.num == num) {
 				return i.title;
 			}
 		}
+		lock.unlock();
 
 		return "";
 	}
