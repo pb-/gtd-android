@@ -1,8 +1,20 @@
-package pb.gtd;
+package pb.gtd.command;
 
+import android.util.Base64;
+
+import java.security.SecureRandom;
 import java.util.ArrayList;
 
-public class Command {
+import javax.crypto.Cipher;
+import javax.crypto.spec.GCMParameterSpec;
+import javax.crypto.spec.SecretKeySpec;
+
+import pb.gtd.Constants;
+import pb.gtd.Item;
+import pb.gtd.Tag;
+import pb.gtd.Util;
+
+public class PlainCommand implements Command {
 	public static final char OP_ITEM_SET_TITLE = 't';
 	public static final char OP_ITEM_DELETE = 'd';
 	public static final char OP_ITEM_SET_TAG = 'T';
@@ -13,7 +25,7 @@ public class Command {
 	public char op;
 	public String argument;
 
-	public Command(char op, String argument) {
+	public PlainCommand(char op, String argument) {
 		this.op = op;
 		this.argument = argument;
 	}
@@ -22,12 +34,12 @@ public class Command {
 		return "" + op + ' ' + argument.replace('\n', ' ');
 	}
 
-	public static Command parse(String s) {
+	public static PlainCommand parse(String s) {
 		int newline = s.indexOf('\n');
 		if (newline == -1) {
-			return new Command(s.charAt(0), s.substring(2));
+			return new PlainCommand(s.charAt(0), s.substring(2));
 		} else {
-			return new Command(s.charAt(0), s.substring(2, newline));
+			return new PlainCommand(s.charAt(0), s.substring(2, newline));
 		}
 	}
 
@@ -135,4 +147,41 @@ public class Command {
 		}
 
 	}
+
+    @Override
+    public PlainCommand getDecrypted(byte[] key) {
+        return this;
+    }
+
+    @Override
+    public EncryptedCommand getEncrypted(byte[] key) throws Exception {
+        byte[] plain = this.toString().getBytes("UTF-8");
+
+        long timestamp = System.currentTimeMillis();
+        SecureRandom sr = new SecureRandom();
+        byte[] random = new byte[3];
+		sr.nextBytes(random);
+
+        byte[] iv = Util.packIV(timestamp, random);
+
+        SecretKeySpec skeySpec = new SecretKeySpec(key, "AES");
+        GCMParameterSpec ivspec = new GCMParameterSpec(128, iv);
+        Cipher cipher = Cipher.getInstance("AES/GCM/NoPadding");
+        cipher.init(Cipher.ENCRYPT_MODE, skeySpec, ivspec);
+
+        byte[] output = cipher.doFinal(plain);
+
+        String ivString = Base64.encodeToString(iv, Base64.NO_WRAP).substring(0, 10);
+        String tag = Base64.encodeToString(output, plain.length, 16, Base64.NO_WRAP);
+        String payload = Base64.encodeToString(output, 0, plain.length, Base64.NO_WRAP);
+
+        return new EncryptedCommand(ivString + ' ' + tag + payload);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        PlainCommand cmd = (PlainCommand)o;
+
+        return this.op == cmd.op && this.argument.equals(cmd.argument);
+    }
 }

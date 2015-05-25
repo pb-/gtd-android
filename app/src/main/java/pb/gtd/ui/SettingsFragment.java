@@ -37,14 +37,14 @@ public class SettingsFragment extends PreferenceFragment implements
 	}
 
 	private void setSummaries() {
-		String keys[] = { "server", "username", "password" };
+		String keys[] = { "server", "username", "password", "passphrase" };
 
 		SharedPreferences sp = getPreferenceScreen().getSharedPreferences();
 
 		for (String k : keys) {
 			Preference connectionPref = findPreference(k);
 
-			if (!k.equals("password")) {
+			if (!k.equals("password") && !k.equals("passphrase")) {
 				connectionPref.setSummary(sp.getString(k, ""));
 			}
 		}

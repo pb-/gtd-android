@@ -34,7 +34,7 @@
             android:windowSoftInputMode="stateUnchanged" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="pb.gtd.TagListActivity" />
+                android:value="pb.gtd.ui.TagListActivity" />
         </activity>
 
         <service

@@ -7,9 +7,7 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
 
-import pb.gtd.AnnotatedCommand;
 import pb.gtd.Constants;
-import pb.gtd.Heads;
 import pb.gtd.Util;
 import pb.gtd.service.db.Database;
 import android.util.Base64;
@@ -59,29 +57,29 @@ public class SyncRunner implements Runnable {
 	private Heads performPullRequest() throws Exception {
 		Database db = service.getDatabase();
 		String data = performRequest("pull", db.getHeads().toString());
+        int end;
 
 		if (data != null) {
-			int pos = data.indexOf("\n\n");
-			if (pos == -1) {
-				return null;
-			}
-			Heads remoteHeads = Heads.parse(data.substring(0, pos + 1));
+            Heads remoteHeads;
+            int off = 0;
+			if( data.charAt(0) != '\n' ) {
+                off = data.indexOf("\n\n");
+                if( off == -1 ) {
+                    return null;
+                }
+                remoteHeads = Heads.parse(data.substring(0, off + 1));
+                off += 2;
+            } else {
+                remoteHeads = new Heads();
+                off += 1;
+            }
 
-			ArrayList<AnnotatedCommand> cmds = new ArrayList<AnnotatedCommand>();
-			int off = pos + 2;
-			while (off < data.length()) {
-				cmds.add(AnnotatedCommand.parse(data.substring(off).toString()));
+            while( off < data.length() ) {
+                DataChunk dc = DataChunk.parse(data.substring(off));
+                off += dc.parsedSize;
 
-				pos = data.indexOf('\n', off + 1);
-				if (pos == -1) {
-					off = data.length();
-				} else {
-					off = pos + 1;
-				}
-			}
-
-			db.insertCommands(cmds, false);
-			cmds = null;
+                db.insertData(dc);
+            }
 
 			return remoteHeads;
 		} else {
@@ -90,7 +88,8 @@ public class SyncRunner implements Runnable {
 	}
 
 	private void performPushRequest(Heads local, Heads remote) throws Exception {
-		ArrayList<Database.PushItem> pl = new ArrayList<Database.PushItem>();
+        Database database = service.getDatabase();
+		String data = new String();
 
 		int from, diff;
 		for (short o : local.map.keySet()) {
@@ -102,17 +101,13 @@ public class SyncRunner implements Runnable {
 
 			diff = local.map.get(o) - from;
 			if (diff > 0) {
-				for (int i = 0; i < diff; i++) {
-					pl.add(new Database.PushItem(o, from + i + 1, -1, -1));
-				}
+				data += database.selectData(o, from, diff).format();
 			}
 		}
 
-		if (pl.size() > 0) {
-			StringBuilder sb = new StringBuilder();
-			service.getDatabase().retrieveRevisions(pl, sb);
-			performRequest("push", sb.toString());
-		}
+        if (data.length() > 0) {
+            performRequest("push", data);
+        }
 	}
 
 	private String performRequest(String operation, String content)

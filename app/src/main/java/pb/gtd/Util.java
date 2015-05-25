@@ -42,6 +42,36 @@ public class Util {
 		return r.nextInt((int) Math.pow(alpha.length(), len));
 	}
 
+    public static byte[] packIV(long timestamp, byte[] random) {
+        byte[] iv = new byte[8];
+
+        long seconds = timestamp / 1000;
+        short msec = (short) (timestamp % 1000);
+
+        iv[0] = (byte) (seconds >> 24);
+        iv[1] = (byte) (seconds >> 16);
+        iv[2] = (byte) (seconds >> 8);
+        iv[3] = (byte) seconds;
+        iv[4] = (byte) (msec >> 2);
+        iv[5] = (byte) (((msec & 3) << 6) | (random[0] & 0x3f));
+        iv[6] = random[1];
+        iv[7] = (byte) (random[2] & 0xf0); // we use only 60 bits for the iv.
+
+        return iv;
+    }
+
+    public static long unpackIVTimestamp(byte[] packed) {
+        long seconds = (long) (packed[0] & 0xff) << 24 | (packed[1] & 0xff) << 16 |
+                (packed[2] & 0xff) << 8 | (packed[3] & 0xff);
+        short msec = (short) ((packed[4] & 0xff) << 2 | (packed[5] & 0xff) >> 6);
+
+        return seconds * 1000 + msec;
+    }
+
+    public static byte[] unpackIVRandom(byte[] packed) {
+        return new byte[] {(byte) (packed[5] & 0x3f), packed[6], packed[7]};
+    }
+
 	public static void writeCrashReport(RuntimeException re) {
 		String state = Environment.getExternalStorageState();
 		if (Environment.MEDIA_MOUNTED.equals(state)) {

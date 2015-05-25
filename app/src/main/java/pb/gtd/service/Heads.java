@@ -1,7 +1,10 @@
-package pb.gtd;
+package pb.gtd.service;
 
 import java.util.HashMap;
 import java.util.Map;
+
+import pb.gtd.Constants;
+import pb.gtd.Util;
 
 public class Heads {
 	public HashMap<Short, Integer> map;

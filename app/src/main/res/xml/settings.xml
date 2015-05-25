@@ -17,5 +17,11 @@
         android:inputType="textPassword"
         android:key="password"
         android:title="Password" />
+    <EditTextPreference
+    android:dialogMessage="Encryption passphrase"
+    android:dialogTitle="Passphrase"
+    android:inputType="textPassword"
+    android:key="passphrase"
+    android:title="Passphrase" />
 
 </PreferenceScreen>
