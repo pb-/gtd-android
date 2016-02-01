@@ -38,7 +38,7 @@ public class SyncRunner implements Runnable {
 
             try {
                 localHeads = new Heads(service.getDatabase().getHeads());
-                remoteHeads = performPullRequest();
+                remoteHeads = performPullRequest(localHeads);
                 performPushRequest(localHeads, remoteHeads);
             } catch (Exception e) {
                 service.onSyncError(e.getMessage());
@@ -55,9 +55,11 @@ public class SyncRunner implements Runnable {
         }
     }
 
-    private Heads performPullRequest() throws Exception {
-        Database db = service.getDatabase();
-        JSONObject offs = new JSONObject(db.getHeads().map);
+    private Heads performPullRequest(Heads localHeads) throws Exception {
+        JSONObject offs = new JSONObject();
+        for (short origin : localHeads.map.keySet()) {
+            offs.put(Util.encodeNum(origin, Constants.ORIGIN_LEN), localHeads.map.get(origin));
+        }
         JSONObject input = new JSONObject();
         input.put("offs", offs);
 
@@ -75,15 +77,15 @@ public class SyncRunner implements Runnable {
 
             DataChunk dc = new DataChunk((short) Util.decodeNum(origin, Constants.ORIGIN_LEN),
                     offset, content);
-            db.insertData(dc);
+            service.getDatabase().insertData(dc);
         }
 
         return remoteHeads;
     }
 
     private void performPushRequest(Heads local, Heads remote) throws Exception {
-        /*Database database = service.getDatabase();
-        String data = new String();
+        Database database = service.getDatabase();
+        JSONObject data = new JSONObject();
 
         int from, diff;
         for (short o : local.map.keySet()) {
@@ -95,13 +97,19 @@ public class SyncRunner implements Runnable {
 
             diff = local.map.get(o) - from;
             if (diff > 0) {
-                data += database.selectData(o, from, diff).format();
+                DataChunk dc = database.selectData(o, from, diff);
+                JSONArray array = new JSONArray();
+                array.put(dc.offset);
+                array.put(dc.data);
+                data.put(Util.encodeNum(o, Constants.ORIGIN_LEN), array);
             }
         }
 
         if (data.length() > 0) {
-            performRequest("push", data);
-        }*/
+            JSONObject json = new JSONObject();
+            json.put("data", data);
+            performRequest("push", json);
+        }
     }
 
     private JSONObject performRequest(String operation, JSONObject content)

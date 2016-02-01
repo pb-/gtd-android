@@ -69,6 +69,7 @@ public class TagListActivity extends Activity implements OnItemClickListener,
 
 					}
 				} catch (RuntimeException re) {
+					Log.d("ui", "ooops");
 					Util.writeCrashReport(re);
 				}
 			}
@@ -120,6 +121,7 @@ public class TagListActivity extends Activity implements OnItemClickListener,
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
 		case R.id.action_sync:
+			Log.d("ui", "clicked on sync");
 			setSyncState(true);
 			return true;
 		case R.id.action_settings:
@@ -150,12 +152,14 @@ public class TagListActivity extends Activity implements OnItemClickListener,
 
 	protected synchronized boolean setSyncState(boolean sync) {
 		if (sync && syncing) {
+			Log.d("ui", "not syncing because already running");
 			return false;
 		} else {
 			if (sync) {
 				GTDService.instance.requestSync();
 			}
 
+			Log.d("ui", "sync state change: " + syncing + " --> " + sync);
 			syncing = sync;
 			// invalidateOptionsMenu();
 			return true;
