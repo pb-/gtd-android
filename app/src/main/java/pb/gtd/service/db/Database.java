@@ -78,13 +78,13 @@ public class Database {
 
     public synchronized boolean insertCommand(Command c) {
         try {
-            String data = c.getEncrypted(getKey()).toString() + '\n';
             int offset;
             if (!heads.map.containsKey(name)) {
                 offset = 0;
             } else {
                 offset = heads.map.get(name);
             }
+            String data = c.getEncrypted(getKey(), name, offset).toString();
             DataChunk dc = new DataChunk(name, offset, data);
             insertData(dc);
             return true;
@@ -105,16 +105,14 @@ public class Database {
         Log.i("db", "database ready, " + heads.map.size() + " heads");
     }
 
-    private byte[] getKey() {
+    static public byte[] hashPassphrase(String passphrase) {
         byte[] salt = {-8, -103, -118, -116, 42, 58, -108, 8, 97, -125, 10, 77, -85, 98, -2, 70,};
 
         try {
             MessageDigest digester = MessageDigest.getInstance("SHA256");
             digester.update(salt);
-            digester.update(service.getPassphrase().getBytes("UTF-8"));
-            byte[] key = digester.digest();
-            //Log.d("crypto", "key is " + Arrays.toString(key));
-            return key;
+            digester.update(passphrase.getBytes("UTF-8"));
+            return digester.digest();
         } catch (NoSuchAlgorithmException e) {
             e.printStackTrace();
             Log.e("db", "no sha256");
@@ -124,6 +122,10 @@ public class Database {
         }
 
         return new byte[0];
+    }
+
+    private byte[] getKey() {
+        return hashPassphrase(service.getPassphrase());
     }
 
     private void loadName() {
@@ -162,10 +164,14 @@ public class Database {
     private void runCommands(Heads start) {
         class FileContext implements Comparable<FileContext> {
             public long time;
+            short origin;
+            long offset;
             public String line;
             RandomAccessFile file;
 
-            public FileContext(RandomAccessFile raf) throws IOException {
+            public FileContext(RandomAccessFile raf, short origin) throws IOException {
+                this.origin = origin;
+                this.offset = raf.getFilePointer();
                 line = raf.readLine();
                 if (line == null) {
                     raf.close();
@@ -195,7 +201,7 @@ public class Database {
                 entry.setValue((int) raf.length());
 
                 try {
-                    lines.add(new FileContext(raf));
+                    lines.add(new FileContext(raf, entry.getKey()));
                 } catch (IOException e) {
                     // all good
                 }
@@ -207,7 +213,7 @@ public class Database {
 
                 //Log.d("db", "read command: " + fc.line);
                 try {
-                    service.evaluateCommand(EncryptedCommand.parse(fc.line).getDecrypted(getKey()),
+                    service.evaluateCommand(EncryptedCommand.parse(fc.origin, fc.offset, fc.line).getDecrypted(getKey()),
                             false);
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -215,7 +221,7 @@ public class Database {
                 }
 
                 try {
-                    lines.add(0, new FileContext(fc.file));
+                    lines.add(0, new FileContext(fc.file, fc.origin));
                 } catch (IOException e) {
                     // all good
                 }

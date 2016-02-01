@@ -37,15 +37,21 @@ public class SettingsFragment extends PreferenceFragment implements
 	}
 
 	private void setSummaries() {
-		String keys[] = { "server", "username", "password", "passphrase" };
+		String keys[] = { "synchost", "synctoken", "passphrase" };
 
 		SharedPreferences sp = getPreferenceScreen().getSharedPreferences();
 
 		for (String k : keys) {
 			Preference connectionPref = findPreference(k);
 
-			if (!k.equals("password") && !k.equals("passphrase")) {
+			if (!k.equals("synctoken") && !k.equals("passphrase")) {
 				connectionPref.setSummary(sp.getString(k, ""));
+			} else {
+				if (sp.getString(k, "").equals("")) {
+					connectionPref.setSummary("Not set");
+				} else {
+					connectionPref.setSummary("Set");
+				}
 			}
 		}
 	}

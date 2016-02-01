@@ -1,50 +1,29 @@
 package pb.gtd.service;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.util.HashMap;
-import java.util.Map;
+import java.util.Iterator;
 
 import pb.gtd.Constants;
 import pb.gtd.Util;
 
 public class Heads {
-	public HashMap<Short, Integer> map;
+    public HashMap<Short, Integer> map = new HashMap<Short, Integer>();
 
-	public Heads() {
-		map = new HashMap<Short, Integer>();
-	}
+    public Heads() {
+    }
 
-	public Heads(Heads heads) {
-		map = new HashMap<Short, Integer>(heads.map);
-	}
+    public Heads(JSONObject obj) throws JSONException {
+        Iterator<String> keys = obj.keys();
+        while (keys.hasNext()) {
+            String key = keys.next();
+            map.put((short) Util.decodeNum(key, Constants.ORIGIN_LEN), obj.getInt(key));
+        }
+    }
 
-	public String toString() {
-		StringBuilder sb = new StringBuilder();
-
-		for (Map.Entry<Short, Integer> entry : map.entrySet()) {
-			sb.append(Util.encodeNum(entry.getKey(), Constants.ORIGIN_LEN));
-			sb.append(' ');
-			sb.append(entry.getValue());
-			sb.append('\n');
-		}
-
-		return sb.toString();
-	}
-
-	public static Heads parse(String s) {
-		Heads heads = new Heads();
-		int off = 0;
-
-		while (off < s.length()) {
-			short origin = (short) Util.decodeNum(s.substring(off),
-					Constants.ORIGIN_LEN);
-			int newline = s.indexOf('\n', off);
-			int rev = Integer.parseInt(s.substring(off + Constants.ORIGIN_LEN
-					+ 1, newline));
-			heads.map.put(origin, rev);
-
-			off = newline + 1;
-		}
-
-		return heads;
-	}
+    public Heads(Heads heads) {
+        map = new HashMap<Short, Integer>(heads.map);
+    }
 }

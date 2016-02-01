@@ -1,27 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
-<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" >
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
 
     <EditTextPreference
-        android:dialogMessage="(use https://.../)"
-        android:dialogTitle="Server Location"
-        android:key="server"
-        android:title="Server Location" />
+        android:dialogMessage="IP or hostname."
+        android:dialogTitle="Synchronization host"
+        android:key="synchost"
+        android:title="Synchronization host" />
     <EditTextPreference
-        android:dialogMessage="Your username"
-        android:dialogTitle="Username"
-        android:key="username"
-        android:title="Username" />
-    <EditTextPreference
-        android:dialogMessage="Your password"
-        android:dialogTitle="Password"
+        android:dialogMessage="An authentication token consists of 10 alphanumeric characters."
+        android:dialogTitle="Synchronization token"
         android:inputType="textPassword"
-        android:key="password"
-        android:title="Password" />
+        android:key="synctoken"
+        android:title="Synchronization token" />
     <EditTextPreference
-    android:dialogMessage="Encryption passphrase"
-    android:dialogTitle="Passphrase"
-    android:inputType="textPassword"
-    android:key="passphrase"
-    android:title="Passphrase" />
+        android:dialogMessage="Encryption passphrase."
+        android:dialogTitle="Passphrase"
+        android:inputType="textPassword"
+        android:key="passphrase"
+        android:title="Passphrase" />
 
 </PreferenceScreen>

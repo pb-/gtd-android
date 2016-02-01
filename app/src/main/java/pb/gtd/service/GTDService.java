@@ -249,7 +249,7 @@ public class GTDService extends Service {
      * @return
      */
     public void requestSync(long delay) {
-        if (getServerLocation().length() == 0) {
+        if (getSyncHost().length() == 0) {
             Log.d("service", "no sync server configured.");
             return;
         }
@@ -273,12 +273,6 @@ public class GTDService extends Service {
 
     public Database getDatabase() {
         return db;
-    }
-
-    public String getServerLocation() {
-        SharedPreferences sp = PreferenceManager
-                .getDefaultSharedPreferences(getApplicationContext());
-        return sp.getString("server", "");
     }
 
     public String export(boolean full) {
@@ -340,16 +334,16 @@ public class GTDService extends Service {
     // return url.getHost();
     // }
 
-    public String getUserName() {
+    public String getSyncHost() {
         SharedPreferences sp = PreferenceManager
                 .getDefaultSharedPreferences(getApplicationContext());
-        return sp.getString("username", "");
+        return sp.getString("synchost", "");
     }
 
-    public String getPassword() {
+    public String getSyncToken() {
         SharedPreferences sp = PreferenceManager
                 .getDefaultSharedPreferences(getApplicationContext());
-        return sp.getString("password", "");
+        return sp.getString("synctoken", "");
     }
 
     public String getPassphrase() {
