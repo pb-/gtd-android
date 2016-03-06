@@ -12,7 +12,8 @@ import java.util.Date;
 import java.util.Random;
 
 public class Util {
-    public final static String alpha = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
+    public final static String alpha =
+            "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
 
     public static int decodeNum(String num, int len) {
         int n = 0;

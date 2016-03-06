@@ -5,18 +5,18 @@
         android:dialogMessage="IP or hostname."
         android:dialogTitle="Synchronization host"
         android:key="synchost"
-        android:title="Synchronization host" />
+        android:title="Synchronization host"/>
     <EditTextPreference
         android:dialogMessage="An authentication token consists of 10 alphanumeric characters."
         android:dialogTitle="Synchronization token"
         android:inputType="textPassword"
         android:key="synctoken"
-        android:title="Synchronization token" />
+        android:title="Synchronization token"/>
     <EditTextPreference
         android:dialogMessage="Encryption passphrase."
         android:dialogTitle="Passphrase"
         android:inputType="textPassword"
         android:key="passphrase"
-        android:title="Passphrase" />
+        android:title="Passphrase"/>
 
 </PreferenceScreen>

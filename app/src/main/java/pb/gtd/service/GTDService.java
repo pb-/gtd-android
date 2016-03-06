@@ -237,7 +237,8 @@ public class GTDService extends Service {
     }
 
     public boolean isOnline() {
-        ConnectivityManager connMgr = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        ConnectivityManager connMgr = (ConnectivityManager) getSystemService(Context
+                .CONNECTIVITY_SERVICE);
         NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
         return (networkInfo != null && networkInfo.isConnected());
     }

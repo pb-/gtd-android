@@ -173,9 +173,12 @@ public class PlainCommand implements Command {
         cipher.updateAAD(aad.getBytes());
         byte[] output = cipher.doFinal(plain);
 
-        String ivString = Base64.encodeToString(iv, Base64.NO_WRAP | Base64.NO_PADDING).substring(0, 10);
-        String tag = Base64.encodeToString(output, plain.length, 16, Base64.NO_WRAP | Base64.NO_PADDING);
-        String payload = Base64.encodeToString(output, 0, plain.length, Base64.NO_WRAP | Base64.NO_PADDING);
+        String ivString = Base64.encodeToString(iv, Base64.NO_WRAP | Base64.NO_PADDING).substring
+                (0, 10);
+        String tag = Base64.encodeToString(output, plain.length, 16, Base64.NO_WRAP | Base64
+                .NO_PADDING);
+        String payload = Base64.encodeToString(output, 0, plain.length, Base64.NO_WRAP | Base64
+                .NO_PADDING);
 
         return new EncryptedCommand(origin, offset, ivString + ' ' + tag + ' ' + payload + '\n');
     }

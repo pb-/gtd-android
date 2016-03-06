@@ -19,7 +19,8 @@ public class DataChunk {
         int start = 0;
         int end;
 
-        short origin = (short) Util.decodeNum(s.substring(start, start + Constants.ORIGIN_LEN), Constants.ORIGIN_LEN);
+        short origin = (short) Util.decodeNum(s.substring(start, start + Constants.ORIGIN_LEN),
+                Constants.ORIGIN_LEN);
         start += Constants.ORIGIN_LEN + 1;
 
         end = s.indexOf(' ', start);
@@ -37,6 +38,7 @@ public class DataChunk {
 
     public String format() {
         String s = new String();
-        return Util.encodeNum(origin, Constants.ORIGIN_LEN) + ' ' + offset + ' ' + data.length() + '\n' + data;
+        return Util.encodeNum(origin, Constants.ORIGIN_LEN) + ' ' + offset + ' ' + data.length()
+                + '\n' + data;
     }
 }

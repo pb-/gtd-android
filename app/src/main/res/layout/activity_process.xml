@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent" >
+                xmlns:tools="http://schemas.android.com/tools"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
 
     <TextView
         android:id="@+id/item_title"
@@ -11,7 +11,7 @@
         android:layout_alignParentLeft="true"
         android:layout_alignParentTop="true"
         android:text=""
-        android:textAppearance="?android:attr/textAppearanceMedium" />
+        android:textAppearance="?android:attr/textAppearanceMedium"/>
 
     <GridView
         android:id="@+id/tag_list_grid"
@@ -19,7 +19,7 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/item_title"
         android:layout_centerHorizontal="true"
-        android:numColumns="3" >
+        android:numColumns="3">
     </GridView>
 
     <EditText
@@ -31,7 +31,7 @@
         android:ems="10"
         android:hint="@string/add_tag_hint"
         android:imeActionLabel="Add"
-        android:inputType="text" >
+        android:inputType="text">
     </EditText>
 
     <RelativeLayout
@@ -39,7 +39,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/add_tag_input"
-        android:layout_centerHorizontal="true" >
+        android:layout_centerHorizontal="true">
 
         <TextView
             android:id="@+id/month_name"
@@ -47,7 +47,7 @@
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
             android:text=""
-            android:textAppearance="?android:attr/textAppearanceMedium" />
+            android:textAppearance="?android:attr/textAppearanceMedium"/>
 
         <Button
             android:id="@+id/month_prev"
@@ -55,7 +55,7 @@
             android:layout_height="wrap_content"
             android:layout_toLeftOf="@+id/month_next"
             android:text="&lt;"
-            tools:ignore="HardcodedText" />
+            tools:ignore="HardcodedText"/>
 
         <Button
             android:id="@+id/month_next"
@@ -63,7 +63,7 @@
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
             android:text=">"
-            tools:ignore="HardcodedText" />
+            tools:ignore="HardcodedText"/>
     </RelativeLayout>
 
     <GridView
@@ -72,7 +72,7 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/month_layout"
         android:layout_centerHorizontal="true"
-        android:numColumns="7" >
+        android:numColumns="7">
     </GridView>
 
 </RelativeLayout>

@@ -193,7 +193,8 @@ public class Database {
             for (Map.Entry<Short, Integer> entry : heads.map.entrySet()) {
                 RandomAccessFile raf = new RandomAccessFile(
                         service.getFileStreamPath(
-                                Util.encodeNum(entry.getKey(), Constants.ORIGIN_LEN) + ".cmd"), "r");
+                                Util.encodeNum(entry.getKey(), Constants.ORIGIN_LEN) + ".cmd"),
+                        "r");
                 if (entry.getValue() > 0) {
                     raf.seek(entry.getValue());
                 }
@@ -213,7 +214,8 @@ public class Database {
 
                 //Log.d("db", "read command: " + fc.line);
                 try {
-                    service.evaluateCommand(EncryptedCommand.parse(fc.origin, fc.offset, fc.line).getDecrypted(getKey()),
+                    service.evaluateCommand(EncryptedCommand.parse(fc.origin, fc.offset, fc.line)
+                                    .getDecrypted(getKey()),
                             false);
                 } catch (Exception e) {
                     e.printStackTrace();
