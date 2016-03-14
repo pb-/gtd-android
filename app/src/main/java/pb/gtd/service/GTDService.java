@@ -246,8 +246,7 @@ public class GTDService extends Service {
     /**
      * request that the next synchronization is run after delay (possibly 0).
      *
-     * @param delay
-     * @return
+     * @param delay delay in milliseconds
      */
     public void requestSync(long delay) {
         if (getSyncHost().length() == 0) {

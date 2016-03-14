@@ -15,6 +15,7 @@ public class Heads {
     public Heads() {
     }
 
+    @SuppressWarnings("unchecked")
     public Heads(JSONObject obj) throws JSONException {
         Iterator<String> keys = obj.keys();
         while (keys.hasNext()) {

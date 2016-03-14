@@ -13,7 +13,7 @@ public class ItemListItem {
 
     public ItemListItem(Item it) {
         num = it.num;
-        title = new String(it.title);
+        title = it.title;
     }
 
     public String extractLink() {

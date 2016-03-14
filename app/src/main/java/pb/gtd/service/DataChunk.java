@@ -37,7 +37,6 @@ public class DataChunk {
     }
 
     public String format() {
-        String s = new String();
         return Util.encodeNum(origin, Constants.ORIGIN_LEN) + ' ' + offset + ' ' + data.length()
                 + '\n' + data;
     }

@@ -10,7 +10,7 @@ public class Tag {
     }
 
     public Tag(Tag t) {
-        title = new String(t.title);
+        title = t.title;
         count = t.count;
     }
 

@@ -10,7 +10,7 @@ import pb.gtd.R;
 public class ButtonListAdapter<T> extends ArrayAdapter<T> {
 
     public interface OnClickListener {
-        public void onClick(int pos);
+        void onClick(int pos);
     }
 
     protected OnClickListener listener;

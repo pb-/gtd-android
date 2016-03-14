@@ -8,7 +8,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.GridView;
 import android.widget.TextView;
@@ -62,8 +61,8 @@ public class ProcessActivity extends Activity implements
         ((EditText) findViewById(R.id.add_tag_input))
                 .setOnEditorActionListener(this);
 
-        ((Button) findViewById(R.id.month_prev)).setOnClickListener(this);
-        ((Button) findViewById(R.id.month_next)).setOnClickListener(this);
+        findViewById(R.id.month_prev).setOnClickListener(this);
+        findViewById(R.id.month_next).setOnClickListener(this);
 
         month = new GregorianCalendar();
         refreshCalendar();

@@ -17,12 +17,7 @@ public class ItemListAdapter extends ArrayAdapter<ItemListItem> {
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        View v = super.getView(position, convertView, parent);
-        /*
-		 * if (convertView == null) { Log.d("ui", "convert is null"); }
-		 * Log.d("ui", "VIEW: " + position + " " + v);
-		 */
-        return v;
+        return super.getView(position, convertView, parent);
     }
 
 }

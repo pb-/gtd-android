@@ -55,6 +55,7 @@ public class SyncRunner implements Runnable {
         }
     }
 
+    @SuppressWarnings("unchecked")
     private Heads performPullRequest(Heads localHeads) throws Exception {
         JSONObject offs = new JSONObject();
         for (short origin : localHeads.map.keySet()) {

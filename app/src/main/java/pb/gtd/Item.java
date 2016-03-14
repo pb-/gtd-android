@@ -15,14 +15,6 @@ public class Item {
         this.tag = tag;
     }
 
-    public Item(Item it) {
-        this.num = it.num;
-        this.title = new String(title);
-        if (it.tag != null) {
-            this.tag = new String(tag);
-        }
-    }
-
     public boolean equals(Object o) {
         return num == ((Item) o).num;
     }
