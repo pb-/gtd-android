@@ -19,6 +19,7 @@ public class PlainCommand implements Command {
     public static final char OP_ITEM_DELETE = 'd';
     public static final char OP_ITEM_SET_TAG = 'T';
     public static final char OP_ITEM_REMOVE_TAG = 'D';
+    public static final char OP_ITEMS_REORDER = 'O';
     public static final char OP_TAG_REMOVE = 'r';
     public static final char OP_TAG_REORDER = 'o';
 
@@ -102,6 +103,8 @@ public class PlainCommand implements Command {
                     tagList.add(anchorIdx, t);
                 }
             }
+        } else if (op == OP_ITEMS_REORDER) {
+            // TODO: implement some day, ok to ignore for now
         } else {
             int num = Util.decodeNum(argument, Constants.NUM_LEN);
             int idx = findItemIndex(num, itemList);
