@@ -2,7 +2,10 @@ apply plugin: 'com.android.application'
 
 android {
     compileSdkVersion 19
-    buildToolsVersion "21.1.2"
+
+    lintOptions {
+        checkReleaseBuilds false
+    }
 
     defaultConfig {
         applicationId "pb.gtd2"
@@ -19,5 +22,5 @@ android {
 }
 
 dependencies {
-    compile "com.android.support:support-v4:19.0.0"
+    implementation "com.android.support:support-v4:19.0.0"
 }
