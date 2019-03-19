@@ -116,7 +116,7 @@ public class SyncRunner implements Runnable {
     private JSONObject performRequest(String operation, JSONObject content)
             throws Exception {
         try {
-            URL url = new URL("https://" + service.getSyncHost() + ":9002/gtd/" + service
+            URL url = new URL("https://" + service.getSyncHost() + "/gtd/" + service
                     .getSyncToken() + '/' + operation);
 
             Log.i("netio", "request " + url.toString() + " payload chars: "

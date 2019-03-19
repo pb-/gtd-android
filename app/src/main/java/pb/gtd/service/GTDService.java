@@ -85,70 +85,9 @@ public class GTDService extends Service {
         syncRunner = new SyncRunner(this);
         syncHandler = new Handler(thread.getLooper());
 
-        setupTLS();
         requestSync(0);
 
         notifyObservers();
-    }
-
-    private void setupTLS() {
-        syncHandler.post(new Runnable() {
-            @Override
-            public void run() {
-                // Create a trust manager that trusts one static certificate
-                TrustManager[] trustStaticCert = new TrustManager[]{new X509TrustManager() {
-                    public java.security.cert.X509Certificate[] getAcceptedIssuers() {
-                        return null;
-                    }
-
-                    public void checkClientTrusted(X509Certificate[] certs,
-                                                   String authType) {
-                    }
-
-                    public void checkServerTrusted(X509Certificate[] certs,
-                                                   String authType) throws CertificateException {
-                        if (certs.length != 1) {
-                            throw new CertificateException(
-                                    "no certificate provided");
-                        }
-
-                        if (!Arrays.equals(certs[0].getEncoded(),
-                                Constants.SERVER_CERT)) {
-                            throw new CertificateException(
-                                    "invalid certificate provided");
-                        }
-                    }
-                }};
-
-                // Install the trust manager
-                SSLContext sc;
-                try {
-                    sc = SSLContext.getInstance("SSL");
-                } catch (NoSuchAlgorithmException e) {
-                    Log.e("crypto", e.getMessage());
-                    e.printStackTrace();
-                    return;
-                }
-                try {
-                    sc.init(null, trustStaticCert,
-                            new java.security.SecureRandom());
-                } catch (KeyManagementException e) {
-                    Log.e("crypto", e.getMessage());
-                    e.printStackTrace();
-                    return;
-                }
-                HttpsURLConnection.setDefaultSSLSocketFactory(sc
-                        .getSocketFactory());
-
-                // Create static host name verifier
-                HostnameVerifier staticHostValid = new HostnameVerifier() {
-                    public boolean verify(String hostname, SSLSession session) {
-                        return hostname.equals(Constants.SERVER_HOSTNAME);
-                    }
-                };
-                HttpsURLConnection.setDefaultHostnameVerifier(staticHostValid);
-            }
-        });
     }
 
     @Override

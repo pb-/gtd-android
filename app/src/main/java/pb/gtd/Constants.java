@@ -10,8 +10,4 @@ public interface Constants {
 
     String ACTION_SYNCDONE = "syncdone";
     String ACTION_SYNCERROR = "syncerror";
-
-    String SERVER_HOSTNAME = "your.host.name";
-    byte[] SERVER_CERT = new byte[] { };
-
 }
